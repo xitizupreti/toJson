@@ -1,27 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-class CSVtoJSONConverter extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      jsonData: null,
-    };
-  }
+const CSVtoJSONConverter = () => {
+  const [jsonData, setJsonData] = useState(null);
 
-  handleFileUpload = (event) => {
+  const handleFileUpload = (event) => {
     const file = event.target.files[0];
     const reader = new FileReader();
 
     reader.onload = (e) => {
       const text = e.target.result;
-      const jsonData = this.csvToJSON(text);
-      this.setState({ jsonData });
+      const jsonData = csvToJSON(text);
+      setJsonData(jsonData);
     };
 
     reader.readAsText(file);
   };
 
-  csvToJSON = (csvText) => {
+  const csvToJSON = (csvText) => {
     const lines = csvText.split('\n');
     const headers = lines[0].split(',');
 
@@ -40,18 +35,14 @@ class CSVtoJSONConverter extends React.Component {
     return jsonData;
   };
 
-  render() {
-    const { jsonData } = this.state;
-
-    return (
-      <div>
-        <input type="file" onChange={this.handleFileUpload} />
-        {jsonData && (
-          <pre>{JSON.stringify(jsonData, null, 2)}</pre>
-        )}
-      </div>
-    );
-  }
-}
+  return (
+    <div>
+      <input type="file" onChange={handleFileUpload} />
+      {jsonData && (
+        <pre>{JSON.stringify(jsonData, null, 2)}</pre>
+      )}
+    </div>
+  );
+};
 
 export default CSVtoJSONConverter;
